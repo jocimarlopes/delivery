@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="titulo-home">Horários de Atendimento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card color="dark" *ngFor="let h of lista">
+    <ion-row>
+      <ion-col *ngIf="h.status == 0" size="1"></ion-col>
+      <ion-col *ngIf="h.status == 0" size="1"></ion-col>
+      <ion-col *ngIf="h.status == 1" size="1"></ion-col>
+      <ion-col *ngIf="h.status == 1" style="background-color: var(--ion-color-success);" size="1"></ion-col>
+      <ion-col size="8">
+        <ion-card-header>
+          <ion-card-subtitle>{{h.dia}} <div *ngIf="h.status == 0">FECHADO</div><div *ngIf="h.status == 1">ABERTO</div></ion-card-subtitle>
+          <ion-card-title>{{h.horario_inicio}} - {{h.horario_final}}</ion-card-title>
+        </ion-card-header>
+      </ion-col>
+      <ion-col *ngIf="h.status == 0" style="background-color: var(--ion-color-danger);" size="1"></ion-col>
+      <ion-col *ngIf="h.status == 0" size="1"></ion-col>
+      <ion-col *ngIf="h.status == 1" size="1"></ion-col>
+      <ion-col *ngIf="h.status == 1" size="1"></ion-col>
+    </ion-row>
+  </ion-card>
+
+</ion-content>

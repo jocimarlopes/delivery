@@ -1,0 +1,44 @@
+  .titulo-home{
+      font-size:13px;
+  }
+  
+  .welcome-card ion-img {
+    max-height: 35vh;
+    overflow: hidden;
+  }
+
+  .titulo-produto{
+      font-size:14px;
+      font-weight:300;
+  }
+
+  .preco-produto{
+    font-size:13px;
+    font-weight:200;
+  }
+
+
+  .margin-l{
+      margin-left: 10px;
+  }
+
+  .rodape-carrinho{
+      color: red($color: #940c0c);
+      text-align:center;
+      font-size:15px;
+      margin-top:15px;
+  }
+  #logo-texto {
+    max-height: 45px !important;
+  }
+  .imagem-produto {
+    margin: 6px;
+  }
+  .produtos {
+    margin-bottom: 60px !important;
+  }
+  .logo {
+    margin-top: 20%;
+    width: 100% !important;
+    height: auto;
+  }

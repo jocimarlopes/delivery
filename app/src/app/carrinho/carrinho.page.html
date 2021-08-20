@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Carrinho: {{total_itens}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/produtos"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!cpf">
+    <ion-row>
+    <ion-col size="2"></ion-col>
+    <ion-col size="8">
+      <ion-title class="ion-text-center"><br><br>Carrinho Vazio<br>Volte e comece <br>seu pedido</ion-title>
+      <img src="assets/undraw/cart.svg">
+    </ion-col>
+    <ion-col size="2"></ion-col>
+  </ion-row>
+  </div>
+  <ion-title *ngIf="cpf" class="ion-text-center"><br>Atenção!<br>Verifique se o seu pedido está correto!</ion-title>
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of lista">
+
+      <ion-item-options side="start">
+        <ion-item-option (click)="addItem(item.id)" color="success" class="ion-text-center">Adicionar<br>+1
+        </ion-item-option>
+      </ion-item-options>
+
+      <ion-item *ngIf="item.quantidade > 0">
+        <ion-thumbnail slot="start">
+          <ion-img src="{{url_site_img}}{{item.image}}"></ion-img>
+        </ion-thumbnail>
+        <ion-label>
+
+          {{item.nome}}
+          <h6><span>R$ {{item.valor}}</span> - Quantidade: {{item.quantidade}}</h6>
+
+        </ion-label>
+
+        <ion-fab vertical="center" horizontal="end">
+          <ion-fab-button size="small" (click)="removeItem(item.id)" color="danger">
+            <ion-icon name="trash-outline" color="light"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option (click)="removeItem(item.id)" color="danger" class="ion-text-center">Remover<br>-1
+        </ion-item-option>
+      </ion-item-options>
+
+    </ion-item-sliding>
+  </ion-list>
+
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid>
+    <ion-row>
+
+      <ion-col class="text-carrinho">
+        <ion-icon color="secondary" name="cart"></ion-icon>
+        Carrinho: R$ {{total_carrinho}}
+      </ion-col>
+
+      <ion-col class="text-carrinho">
+        <ion-icon color="danger" name="car"></ion-icon>
+        Entrega: R$ {{frete}}
+      </ion-col>
+
+    </ion-row>
+    <ion-row>
+
+      <ion-col>
+        <h6>
+          <ion-icon color="success" name="card"></ion-icon>
+          Total: R$ {{subtotal2}}
+        </h6>
+      </ion-col>
+
+      <ion-col>
+        <ion-button *ngIf="cpf" (click)="finalizarModal()" shape="round" expand="block" color="danger" fill="outline">
+          Finalizar Pedido</ion-button>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-footer>

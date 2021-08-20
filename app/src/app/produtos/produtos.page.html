@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title *ngIf="!nome" class="titulo-home">O que deseja hoje?</ion-title>
+    <ion-title *ngIf="nome" class="titulo-home">Hey {{nome}}, sinta-se a vontade!</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="comecar()">
+        <ion-icon slot="end" name="person"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+  <!-- Default Segment -->
+  <ion-segment scrollable (ionChange)="segmentChanged($event)">
+    <ion-segment-button *ngFor="let item of categ" value="{{item.id}}">
+      <ion-label>{{item.name}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div *ngIf="segment === ''">
+    <h3 class="ion-text-center">Selecione uma Categoria acima</h3>
+    <ion-row class="ion-text-center">
+      <ion-col size="2"></ion-col>
+      <ion-col size="8">
+        <img class="logo" src="assets/logo.png">
+      </ion-col>
+      <ion-col size="2"></ion-col>
+    </ion-row>
+  </div>
+  <ion-row class="margin-l produtos">
+    <ion-col *ngFor="let item of lista" size="12">
+      <ion-card class="card" *ngIf="item.produto_categoria_id === segment">
+        <ion-row>
+          <ion-col size="4">
+            <ion-img *ngIf="item.image" (click)="verDescricao(item)" class="imagem-produto center" src="{{url_site_img}}{{item.image}}">
+            </ion-img>
+          </ion-col>
+          <ion-col style="margin: auto !important" size="5">
+            <ion-card-header class="ion-text-center">
+              <ion-card-subtitle>R$ {{item.valor}}</ion-card-subtitle>
+              <ion-card-title class="titulo-produto">{{item.nome}}</ion-card-title>
+            </ion-card-header>
+          </ion-col>
+          <ion-col style="margin-top: 15px;" size="3">
+            <ion-card-content>
+              <div *ngIf="item.estoque !== '0'">
+                <ion-fab *ngIf="statusTempo == 1">
+                  <ion-fab-button *ngIf="cpf !== ''" (click)="addCarrinho(item.id)" size="small" expand="block" color="success">
+                    <ion-icon name="add-outline"></ion-icon>
+                  </ion-fab-button>
+                  <ion-fab-button *ngIf="cpf === ''" (click)="comecar()" size="small" expand="block" color="success">
+                    <ion-icon name="help-outline"></ion-icon>
+                  </ion-fab-button>
+                </ion-fab>
+              </div>
+              <div *ngIf="item.estoque === '0'">
+              <ion-fab *ngIf="statusTempo == 1">
+                <ion-fab-button (click)="emFalta()" size="small" expand="block" color="danger">
+                  <ion-icon name="close-outline"></ion-icon>
+                </ion-fab-button>
+              </ion-fab>
+            </div>
+            </ion-card-content>
+
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+  <ion-fab *ngIf="statusTempo == 1" slot="fixed" horizontal="end" vertical="bottom">
+    <ion-fab-button color="danger" (click)="comecar()">
+      <ion-icon color="light" name="cart"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-infinite-scroll (ionInfinite)="loadData($event)" *ngIf="total_itens >= limit">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando produtos">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="8">
+        <img id="logo-texto" src="assets/logo-texto.png">
+      </ion-col>
+
+      <ion-col size="4" class="ion-text-center">
+        <ion-item (click)="comecar()">
+          <h5>R$ {{total_carrinho}}</h5>
+        </ion-item>
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
