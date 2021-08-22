@@ -41,7 +41,7 @@ export class HorariosService {
    * Pegar Hora Abertura
    */
   pegarHoraAbertura() {
-    var horaAbertura = this.dia.horario_inicio.slice(0,2);
+    var horaAbertura = parseInt(this.dia.horario_inicio.slice(0,2));
     return horaAbertura;
   }
 
@@ -49,7 +49,7 @@ export class HorariosService {
    * Pegar Minuto Abertura
    */
   pegarMinutoAbertura() {
-    var minutoAbertura = this.dia.horario_inicio.slice(3,5);
+    var minutoAbertura = parseInt(this.dia.horario_inicio.slice(3,5));
     return minutoAbertura;
   }
 
@@ -57,7 +57,7 @@ export class HorariosService {
    * Pegar Hora Fechamento
    */
   pegarHoraFechamento() {
-    var horaFechamento = this.dia.horario_final.slice(0,2);
+    var horaFechamento = parseInt(this.dia.horario_final.slice(0,2));
     return horaFechamento;
   }
 
@@ -65,29 +65,8 @@ export class HorariosService {
    * Pegar Minuto Fechamento
    */
   pegarMinutoFechamento() {
-    var minutoFechamento = this.dia.horario_final.slice(3,5);
+    var minutoFechamento = parseInt(this.dia.horario_final.slice(3,5));
     return minutoFechamento;
-  }
-
-  /**
-   * Listar Horários
-   * - Horário de Abertura
-   * - Horário de Fechamento
-   * - Dia da Semana
-   */
-  listarHorarios(id) {
-
-    return new Promise(resolve => {
-
-      let dados = {
-        requisicao: 'listar-horarios',
-        id_dia: id
-      };
-      this.post.dadosApi(dados, 'apiHorarios.php').subscribe(data => {
-        this.dia = data['result'][0];
-        
-      });
-    });
   }
 
   /**
@@ -98,7 +77,7 @@ export class HorariosService {
     var date = await new Date();
     this.hoje = await date.getDay();
 
-    this.listarHorarios(this.hoje);
+    //this.listarHorarios(this.hoje);
   }
 
   /**

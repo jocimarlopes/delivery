@@ -10,40 +10,19 @@ const routes: Routes = [
  
   {
     path: 'produtos',
-    loadChildren: () => import('./produtos/produtos.module').then( m => m.ProdutosPageModule)
+    loadChildren: () => import('./pages/produtos/produtos.module').then( m => m.ProdutosPageModule)
   },
-  {
-    path: 'categorias',
-    loadChildren: () => import('./categorias/categorias.module').then( m => m.CategoriasPageModule)
-  },
-
   {
     path: 'produtos/:id',
-    loadChildren: () => import('./produtos/produtos.module').then( m => m.ProdutosPageModule)
-  },
-  {
-    path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
-  },
-  {
-    path: 'cadastro',
-    loadChildren: () => import('./cadastro/cadastro.module').then( m => m.CadastroPageModule)
+    loadChildren: () => import('./pages/produtos/produtos.module').then( m => m.ProdutosPageModule)
   },
   {
     path: 'carrinho',
-    loadChildren: () => import('./carrinho/carrinho.module').then( m => m.CarrinhoPageModule)
-  },
-  {
-    path: 'obrigado',
-    loadChildren: () => import('./obrigado/obrigado.module').then( m => m.ObrigadoPageModule)
-  },
-  {
-    path: 'sobre',
-    loadChildren: () => import('./pages/sobre/sobre.module').then( m => m.SobrePageModule)
+    loadChildren: () => import('./pages/carrinho/carrinho.module').then( m => m.CarrinhoPageModule)
   },
   {
     path: 'horarios',
-    loadChildren: () => import('./horarios/horarios.module').then( m => m.HorariosPageModule)
+    loadChildren: () => import('./pages/horarios/horarios.module').then( m => m.HorariosPageModule)
   },
 
 ];

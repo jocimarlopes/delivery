@@ -1,6 +1,6 @@
 <?php 
 
-header('Location: https://jocimarlopes.tech/delivery');
+header('Location: https://lanchesdojo.store/');
 exit;
 
 ?>

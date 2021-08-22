@@ -1,12 +1,11 @@
-import { Post } from './../services/post.service';
+import { Post } from '../../services/post.service';
 import { Component, OnInit } from '@angular/core';
 import { ToastController, AlertController, ModalController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NativeStorage } from '@ionic-native/native-storage/ngx';
-import { UserService } from '../services/user.service';
-import * as moment from 'moment';
-import { HelpersService } from '../services/helpers.service';
-import { HorariosService } from '../services/horarios.service';
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { HelpersService } from '../../services/helpers.service';
+import { HorariosService } from '../../services/horarios.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-produtos',
@@ -39,87 +38,76 @@ export class ProdutosPage implements OnInit {
 
   locais: any = [];
 
-  valorEntrega: any = 10.00;
+  valorEntrega: any = 12.00;
 
   entrega: any = [];
 
   constructor(
-    public helpers: HelpersService, 
-    public modalController: ModalController, 
-    public alertCtrl: AlertController, 
-    public userService: UserService, 
-    private storage: NativeStorage, 
-    private actRouter: ActivatedRoute, 
-    private router: Router, 
-    private provider: Post, 
+    public helpers: HelpersService,
+    public modalController: ModalController,
+    public alertCtrl: AlertController,
+    public userService: UserService,
+    private router: Router,
+    private provider: Post,
     public toast: ToastController,
-    public horarios: HorariosService
-    
-    ) {
+    public horarios: HorariosService,
+    public storage: StorageService
 
-    this.listarTempo();
-  }
-
-  async delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-  }
-
-  ngOnInit() {
-    this.horarios.pegarHoraAtual();
-    
-    this.listarLocais();
-    this.actRouter.params.subscribe((data: any) => {
-      this.id = data.id;
-    });
+  ) {
     this.listarCategorias();
-
-  }
-
-  ionViewWillEnter() {
-    this.cpf = this.userService.getUserCpf();
-
-    this.lista = [];
-    this.start = 0;
-    this.listarCarrinho();
     this.url_site_img = this.provider.url_site_img_produtos;
   }
 
+  async ngOnInit() {
+
+    await this.getStorage();
+
+    await this.listarLocais();
+
+    await this.listarTempo();
+
+    this.horarios.pegarHoraAtual();
+
+  }
+
+
   comecar() {
+
     if (this.statusTempo == 0) {
-      this.status();
+      this.fechado();
     }
     else {
-      if(this.horarios.pegarHoraAtual() < this.horarios.pegarHoraAbertura() && this.horarios.pegarHoraAtual() > 12) {
-
-        this.status();
+      if (this.horarios.pegarHoraAtual() < this.horarios.pegarHoraAbertura() && this.horarios.pegarHoraAtual() > 12) {
+        this.fechado();
+      }
+      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraAtual() < 12) {
+        this.fechado();
+      }
+      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraAtual() > 12) {
+        this.fechado();
+      }
+      else if (this.horarios.pegarHoraAtual() == this.horarios.pegarHoraAbertura() && this.horarios.pegarMinutoAtual() < this.horarios.pegarMinutoAbertura()) {
+        this.fechado();
+      }
+      else if (this.horarios.pegarHoraAtual() >= this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento()) {
+        this.fechado();
+      }
+      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() < this.horarios.pegarMinutoFechamento()) {
+        this.fechado();
+      }
+      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento()) {
+        this.fechado();
+      }
+      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento()) {
+        this.fechado();
       }
       else {
-        if(this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraAtual() < 12) {
-          this.status();
-        }
-        if(this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraFechamento() > 12) {
-          this.status();
+        if (this.cpf === undefined || this.cpf === '') {
+          this.nomeCpf();
         }
         else {
-          if(this.horarios.pegarHoraAtual() == this.horarios.pegarHoraAbertura() && this.horarios.pegarMinutoAtual() < this.horarios.pegarMinutoAbertura()) {
-            this.status();
-          }
-          else {
-            if(this.horarios.pegarHoraAtual() == this.horarios.pegarHoraFechamento() &&  this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento()) {
-              this.status();
-            }
-            else {
-              if (this.cpf != '') {
-                this.router.navigate(['/carrinho']);
-              }
-              if (this.cpf === undefined || this.cpf === '') {
-                this.nomeCpf();
-              }
-            }
-          }
-          
+          this.helpers.mensagem('Olá ' + this.userService.getUserNome() + ', adicione algo ao carrinho', 2400, 'dark');
         }
-
       }
     }
   }
@@ -142,10 +130,41 @@ export class ProdutosPage implements OnInit {
 
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
         this.helpers.loadingController.dismiss();
-        
+
         if (data['result'] == '0') {
         } else {
           this.lista = [];
+          for (let item of data['result']) {
+            this.lista.push(item);
+            this.total_itens = data['total'];
+
+          }
+        }
+
+        resolve(true);
+
+      });
+
+    });
+
+  }
+
+  async refreshProdutos() {
+    await this.helpers.loader();
+    return new Promise(resolve => {
+
+      let dados = {
+        requisicao: 'listar-produtos',
+        limit: this.limit,
+        start: this.start,
+        id_cat: this.segment,
+      };
+
+      this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
+        this.helpers.loadingController.dismiss();
+
+        if (data['result'] == '0') {
+        } else {
           for (let item of data['result']) {
             this.lista.push(item);
             this.total_itens = data['total'];
@@ -166,8 +185,11 @@ export class ProdutosPage implements OnInit {
     var date = await new Date();
     var id = await date.getDay();
 
-    if(this.horarios.pegarHoraAtual() >= 0 && this.horarios.pegarHoraAtual() < 6) {
-      var id = id -1;
+    if (this.horarios.pegarHoraAtual() >= 0 && this.horarios.pegarHoraAtual() < 6) {
+      var id = id - 1;
+      if (id < 0) {
+        id = 6;
+      }
     }
 
     return new Promise(resolve => {
@@ -180,35 +202,25 @@ export class ProdutosPage implements OnInit {
         this.horarios.setDia(data['result'][0]);
         this.statusTempo = data['result'][0]['status'];
         this.comecar();
+        return
       });
     });
-    
-
   }
-
-
 
   categorias() {
     this.router.navigate(['/categorias']);
   }
 
-
   //barra de rolagem
   loadData(event) {
 
     this.start += this.limit;
-
     setTimeout(() => {
-      this.listarProdutos().then(() => {
+      this.refreshProdutos().then(() => {
         event.target.complete();
       });
-
     }, 3000);
-
-
   }
-
-
 
   async mensagemSalvar() {
     const toast = await this.toast.create({
@@ -263,6 +275,13 @@ export class ProdutosPage implements OnInit {
           handler: (data) => {
             if (data.nome != "" || data.celular != "") {
               if (data.celular.length == 9 || data.celular.length == 11 || data.celular.length == 12) {
+
+                //Storage Services
+                var date = Date();
+                this.storage.set('user', JSON.stringify(data));
+                this.storage.set('token', btoa(date));
+
+
                 this.userService.setUserCpf(data.celular);
                 this.userService.setUserCelular(data.celular);
                 this.cpf = data.celular;
@@ -311,13 +330,10 @@ export class ProdutosPage implements OnInit {
 
     } else {
 
-      this.status();
+      this.fechado();
 
     }
   }
-
-
-
 
   listarCarrinho() {
     return new Promise(resolve => {
@@ -341,7 +357,6 @@ export class ProdutosPage implements OnInit {
 
   }
 
-
   async verDescricao(produto) {
     this.newDescricao = produto.descricao_longa.split(", ").join("<br>");
     const alert = await this.alertCtrl.create({
@@ -355,9 +370,7 @@ export class ProdutosPage implements OnInit {
     await alert.present();
   }
 
-  async status() {
-
-
+  async fechado() {
     const alert = await this.alertCtrl.create({
       cssClass: 'descricao',
       header: "Boa noite!",
@@ -370,8 +383,6 @@ export class ProdutosPage implements OnInit {
   }
 
   segmentChanged(ev: any) {
-    this.delay(500);
-
     this.segment = ev.detail.value;
     this.listarProdutos();
   }
@@ -389,7 +400,7 @@ export class ProdutosPage implements OnInit {
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
 
         if (data['result'] == '0') {
-          this.ionViewWillEnter();
+          console.log('error get categorias');
         } else {
           this.categ = [];
           for (let item of data['result']) {
@@ -414,18 +425,14 @@ export class ProdutosPage implements OnInit {
       };
 
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
-        this.locais = data['result'];
-        
         if (data['result'] == '0') {
-          this.ionViewWillEnter();
+          console.log('error get locais');
         } else {
-          for (let item of data['result']) {
-            //this.locais = item;
-            
-          }
+          this.locais = data['result'];
         }
 
         resolve(true);
+        return;
 
       });
 
@@ -466,7 +473,6 @@ export class ProdutosPage implements OnInit {
   }
 
   configEntrega(data) {
-    
     return new Promise(resolve => {
 
       let dados = {
@@ -475,7 +481,7 @@ export class ProdutosPage implements OnInit {
       };
 
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(res => {
-        
+
         this.valorEntrega = res['result'][0]['price'];
         this.helpers.recebeValorEntrega(res['result'][0]['price']);
         this.helpers.recebeLocal(res['result'][0]);
@@ -484,6 +490,39 @@ export class ProdutosPage implements OnInit {
       });
 
     });
+  }
+
+  async getStorage() {
+    await this.storage.init();
+    await this.storage.get('token').then(token => {
+      if (token) {
+
+        this.storage.get('user').then(data => {
+
+          var user = JSON.parse(data);
+
+          if (data) {
+            //usuário já esteve aqui
+            this.userService.setUserCpf(user.celular);
+            this.userService.setUserCelular(user.celular);
+            this.cpf = user.celular;
+            this.userService.setUserNome(user.nome);
+            this.nome = user.nome;
+            return
+
+          }
+          else {
+            this.comecar();
+            return
+          }
+        });
+      }
+      else {
+        this.comecar();
+        return
+      }
+    })
+
   }
 
 }

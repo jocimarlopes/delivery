@@ -52,19 +52,15 @@ export class AppComponent implements OnInit {
     });
   }
 
-
-
   ngOnInit() {
     
   }
 
   async participe() {
-
- 
     const alert = await this.alertCtrl.create({
       cssClass: 'descricao',
       header: "Quer o seu Sistema Delivery?",
-      subHeader: 'Entre em contato e automatize o seu Delivery também!',
+      subHeader: 'Entre em contato e automatize o seu Negócio Delivery também!',
       message: '<a target="_blank" href="https://jocimarlopes.tech">Acessar o site</a><br><br>Sistema desenvolvido por Jocimar Lopes',
       buttons: ['Sair']
     });
