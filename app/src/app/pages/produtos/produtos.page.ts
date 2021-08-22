@@ -56,22 +56,18 @@ export class ProdutosPage implements OnInit {
   ) {
     this.listarCategorias();
     this.url_site_img = this.provider.url_site_img_produtos;
+    this.listarTempo();
+    this.horarios.pegarHoraAtual();
+    this.listarCarrinho();
   }
 
   async ngOnInit() {
-
     await this.getStorage();
-
     await this.listarLocais();
-
-    await this.listarTempo();
-
-    this.horarios.pegarHoraAtual();
-
   }
 
 
-  comecar() {
+  async comecar() {
 
     if (this.statusTempo == 0) {
       this.fechado();
@@ -106,7 +102,12 @@ export class ProdutosPage implements OnInit {
           this.nomeCpf();
         }
         else {
-          this.helpers.mensagem('Olá ' + this.userService.getUserNome() + ', adicione algo ao carrinho', 2400, 'dark');
+          if(parseInt(this.total_carrinho) > 0) {
+            this.router.navigate(['/carrinho']);
+          }
+          else {
+            this.helpers.mensagem('Olá ' + this.userService.getUserNome() + ', adicione algo ao carrinho', 2400, 'dark');
+          }
         }
       }
     }
@@ -191,19 +192,14 @@ export class ProdutosPage implements OnInit {
         id = 6;
       }
     }
-
-    return new Promise(resolve => {
-
-      let dados = {
-        requisicao: 'listar-horario',
-        id_dia: id
-      };
-      this.provider.dadosApi(dados, 'apiHorarios.php').subscribe(data => {
-        this.horarios.setDia(data['result'][0]);
-        this.statusTempo = data['result'][0]['status'];
-        this.comecar();
-        return
-      });
+    let dados = {
+      requisicao: 'listar-horario',
+      id_dia: id
+    };
+    this.provider.dadosApi(dados, 'apiHorarios.php').subscribe(data => {
+      this.horarios.setDia(data['result'][0]);
+      this.statusTempo = data['result'][0]['status'];
+      this.comecar();
     });
   }
 
@@ -513,13 +509,11 @@ export class ProdutosPage implements OnInit {
           }
           else {
             this.comecar();
-            return
           }
         });
       }
       else {
         this.comecar();
-        return
       }
     })
 
