@@ -5,8 +5,6 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class Post {
-    //url: string = 'https://kingsbeer.store/';
-    //url: string = 'https://lanchesdojo.store/';
 
     url: string = 'https://jocimarlopes.tech/apis/cardapio/';
 

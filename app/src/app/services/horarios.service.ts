@@ -90,8 +90,8 @@ export class HorariosService {
   /**
    * Setar Dia Atual
    */
-  setDia(data) {
-    this.dia = data;
+  async setDia(data) {
+    this.dia = await data;
   }
 
 }

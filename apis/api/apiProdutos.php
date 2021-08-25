@@ -11,7 +11,7 @@ if($postjson['requisicao'] == 'listar-produtos'){
 
   $id_cat = $postjson['id_cat'];
 
-	$query = $pdo->query("SELECT * from produtos where produto_categoria_id = '$id_cat' and estoque != 0 order by id desc limit $postjson[start], $postjson[limit]");
+	$query = $pdo->query("SELECT * from produtos where produto_categoria_id = '$id_cat' and estoque != 0 order by id asc limit $postjson[start], $postjson[limit]");
   
   $res = $query->fetchAll(PDO::FETCH_ASSOC);
   $total = count($res);

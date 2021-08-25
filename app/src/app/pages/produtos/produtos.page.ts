@@ -119,6 +119,8 @@ export class ProdutosPage implements OnInit {
   }
 
   async listarProdutos() {
+    this.limit = 10;
+    this.start = 0;
     await this.helpers.loader();
     return new Promise(resolve => {
 
@@ -151,7 +153,6 @@ export class ProdutosPage implements OnInit {
   }
 
   async refreshProdutos() {
-    await this.helpers.loader();
     return new Promise(resolve => {
 
       let dados = {
@@ -162,7 +163,6 @@ export class ProdutosPage implements OnInit {
       };
 
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
-        this.helpers.loadingController.dismiss();
 
         if (data['result'] == '0') {
         } else {
@@ -199,7 +199,7 @@ export class ProdutosPage implements OnInit {
     this.provider.dadosApi(dados, 'apiHorarios.php').subscribe(data => {
       this.horarios.setDia(data['result'][0]);
       this.statusTempo = data['result'][0]['status'];
-      this.comecar();
+      //this.comecar();
     });
   }
 
