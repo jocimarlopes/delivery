@@ -35,11 +35,11 @@
     <ion-col *ngFor="let item of lista" size="12">
       <ion-card class="card" *ngIf="item.produto_categoria_id === segment">
         <ion-row>
-          <ion-col size="4">
-            <ion-img *ngIf="item.image" (click)="verDescricao(item)" class="imagem-produto center" src="{{url_site_img}}{{item.image}}">
+          <ion-col size="4" (click)="verDescricao(item)">
+            <ion-img *ngIf="item.image" class="imagem-produto center" src="{{url_site_img}}{{item.image}}">
             </ion-img>
           </ion-col>
-          <ion-col style="margin: auto !important" size="5">
+          <ion-col style="margin: auto !important" size="5" (click)="verDescricao(item)">
             <ion-card-header class="ion-text-center">
               <ion-card-subtitle>R$ {{item.valor}}</ion-card-subtitle>
               <ion-card-title class="titulo-produto">{{item.nome}}</ion-card-title>
@@ -58,7 +58,7 @@
                 </ion-fab>
               </div>
               <div *ngIf="item.estoque === '0'">
-              <ion-fab *ngIf="statusTempo == 1">
+              <ion-fab *ngIf="statusTempo == 1 ">
                 <ion-fab-button (click)="emFalta()" size="small" expand="block" color="danger">
                   <ion-icon name="close-outline"></ion-icon>
                 </ion-fab-button>

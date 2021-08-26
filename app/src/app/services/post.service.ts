@@ -6,7 +6,8 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class Post {
 
-    url: string = 'https://jocimarlopes.tech/apis/cardapio/';
+    //url: string = 'https://jocimarlopes.tech/apis/cardapio/';
+    url: string = 'https://lanchesdojo.store/';
 
     server: string = this.url + 'api/';
     url_site_img_produtos: string = this.url + 'admin/storage/';

@@ -10,6 +10,8 @@ export class HorariosService {
   hoje: any;
   dia: any;
 
+  dadosDia: any;
+
   hora: number;
   minuto: number;
 
@@ -27,7 +29,6 @@ export class HorariosService {
     return this.hora;
   }
 
-
   /**
    * Pegar Minuto Atual
    */
@@ -41,7 +42,7 @@ export class HorariosService {
    * Pegar Hora Abertura
    */
   pegarHoraAbertura() {
-    var horaAbertura = parseInt(this.dia.horario_inicio.slice(0,2));
+    var horaAbertura = parseInt(this.dadosDia.horario_inicio.slice(0,2));
     return horaAbertura;
   }
 
@@ -49,7 +50,7 @@ export class HorariosService {
    * Pegar Minuto Abertura
    */
   pegarMinutoAbertura() {
-    var minutoAbertura = parseInt(this.dia.horario_inicio.slice(3,5));
+    var minutoAbertura = parseInt(this.dadosDia.horario_inicio.slice(3,5));
     return minutoAbertura;
   }
 
@@ -57,7 +58,7 @@ export class HorariosService {
    * Pegar Hora Fechamento
    */
   pegarHoraFechamento() {
-    var horaFechamento = parseInt(this.dia.horario_final.slice(0,2));
+    var horaFechamento = parseInt(this.dadosDia.horario_final.slice(0,2));
     return horaFechamento;
   }
 
@@ -65,7 +66,7 @@ export class HorariosService {
    * Pegar Minuto Fechamento
    */
   pegarMinutoFechamento() {
-    var minutoFechamento = parseInt(this.dia.horario_final.slice(3,5));
+    var minutoFechamento = parseInt(this.dadosDia.horario_final.slice(3,5));
     return minutoFechamento;
   }
 
@@ -76,8 +77,6 @@ export class HorariosService {
   async pegarDiaAtual() {
     var date = await new Date();
     this.hoje = await date.getDay();
-
-    //this.listarHorarios(this.hoje);
   }
 
   /**
@@ -86,12 +85,12 @@ export class HorariosService {
   getDia() {
     return this.dia;
   }
-
+ 
   /**
    * Setar Dia Atual
    */
-  async setDia(data) {
-    this.dia = await data;
+  async setDadosDia(data) {
+    this.dadosDia = data;
   }
 
 }

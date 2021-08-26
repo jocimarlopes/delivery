@@ -54,9 +54,9 @@ export class ProdutosPage implements OnInit {
     public storage: StorageService
 
   ) {
+    this.listarTempo();
     this.listarCategorias();
     this.url_site_img = this.provider.url_site_img_produtos;
-    this.listarTempo();
     this.horarios.pegarHoraAtual();
     this.listarCarrinho();
   }
@@ -197,9 +197,9 @@ export class ProdutosPage implements OnInit {
       id_dia: id
     };
     this.provider.dadosApi(dados, 'apiHorarios.php').subscribe(data => {
-      this.horarios.setDia(data['result'][0]);
+      this.horarios.setDadosDia(data['result'][0]);
       this.statusTempo = data['result'][0]['status'];
-      //this.comecar();
+      this.comecar();
     });
   }
 
@@ -235,7 +235,6 @@ export class ProdutosPage implements OnInit {
     });
     toast.present();
   }
-
 
   async mensagemLogar() {
     const toast = await this.toast.create({
@@ -458,8 +457,14 @@ export class ProdutosPage implements OnInit {
         {
           text: 'Ok',
           handler: (data) => {
-            this.configEntrega(data);
-            this.mensagemPadrao('Agora sim! Adicione produtos ao carrinho', 2000, 'success');
+            if(data) {
+              this.configEntrega(data);
+              this.mensagemPadrao('Agora sim! Adicione produtos ao carrinho', 2000, 'success');
+            }
+            else {
+              this.helpers.mensagem('Selecione o Bairro/Local corretamente.', 2000, 'warning');
+              this.bairros();
+            }
           }
         }
       ]
@@ -508,12 +513,10 @@ export class ProdutosPage implements OnInit {
 
           }
           else {
-            this.comecar();
           }
         });
       }
       else {
-        this.comecar();
       }
     })
 
