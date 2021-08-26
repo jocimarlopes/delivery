@@ -67,10 +67,8 @@ export class CarrinhoPage implements OnInit {
   }
 
   logout() {
-    //this.storage.clear();
     this.router.navigate(['/login']);
   }
-
 
   ionViewWillEnter() {
     this.cpf = this.userService.getUserCpf();
@@ -89,7 +87,6 @@ export class CarrinhoPage implements OnInit {
     this.listarTempo();
   }
 
-
   async mensagemLogar() {
     const toast = await this.toast.create({
       message: 'Você precisa estar logado! Faça Login ou Cadastre-se!',
@@ -99,27 +96,18 @@ export class CarrinhoPage implements OnInit {
     toast.present();
   }
 
-
   categorias() {
     this.router.navigate(['/categorias']);
   }
 
-
-
-
   //barra de rolagem
   loadData(event) {
-
     this.start += this.limit;
-
     setTimeout(() => {
       this.listarCarrinho().then(() => {
         event.target.complete();
       });
-
     }, 3000);
-
-
   }
 
   async mensagemSalvar(texto) {
@@ -230,7 +218,8 @@ export class CarrinhoPage implements OnInit {
     });
   }
 
-  addItem(id) {
+  async addItem(id) {
+    await this.helpers.loader();
     return new Promise(resolve => {
 
       let dados = {
@@ -240,7 +229,7 @@ export class CarrinhoPage implements OnInit {
       };
 
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
-
+        this.helpers.loadingController.dismiss();
 
         this.mensagemSalvar('Item Adicionado!');
         //this.listarCarrinho();
@@ -251,7 +240,8 @@ export class CarrinhoPage implements OnInit {
     });
   }
 
-  removeItem(id) {
+  async removeItem(id) {
+    await this.helpers.loader();
     return new Promise(resolve => {
 
       let dados = {
@@ -261,6 +251,7 @@ export class CarrinhoPage implements OnInit {
       };
 
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
+        this.helpers.loadingController.dismiss();
 
         this.mensagemSalvar('Item Removido!');
         //this.listarCarrinho();
@@ -277,6 +268,7 @@ export class CarrinhoPage implements OnInit {
       this.mensagemSalvar('Você precisa ter produtos no carrinho');
     }
     else {
+      var bairro = this.helpers.enviaLocal();
 
       const pagamento = await this.alertController.create({
         header: 'Finalizar Pedido!',
@@ -315,7 +307,6 @@ export class CarrinhoPage implements OnInit {
               if (this.tipo == 'CARTÃO') {
                 this.pagamento = 'CARTÃO';
               }
-              var bairro = this.helpers.enviaLocal();
               this.bairro = bairro.label;
               this.finalizaModal2();
             }
@@ -430,8 +421,8 @@ export class CarrinhoPage implements OnInit {
     await alert.present();
   }
 
-  finalizar() {
-    this.encodeUrl();
+  async finalizar() {
+    await this.encodeUrl();
     return new Promise(resolve => {
 
       let dados = {
@@ -451,7 +442,6 @@ export class CarrinhoPage implements OnInit {
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
         if (data['texto'] == 'Pedido Concluído!') {
           this.mensagemFinaliza = data['texto'];
-          this.mensagemSalvar(data['texto']);
           this.goWhatsapp();
         }
         else {
@@ -488,11 +478,11 @@ export class CarrinhoPage implements OnInit {
   async goWhatsapp() {
     const alert = await this.alertController.create({
       header: 'Atenção!',
-      message: 'Por favor, confirme o pedido enviando ele com um clique!<br><br>Aperte em <b>Enviar</b> para continuar! Obrigado',
+      message: 'Show! Guardamos o seu pedido, já já estaremos enviando! Por favor, envie uma mensagem confirmando o Pedido via Whatsapp!<br><br>Aperte em <b>Enviar</b> para continuar! Obrigado',
       backdropDismiss: false,
       buttons: [
         {
-          text: 'Enviar p/ Whatsapp',
+          text: 'Enviar',
           handler: () => {
 
             window.open("https://api.whatsapp.com/send?phone=55" + this.tempo.contato + "&text=*NOVO*%20*PEDIDO*%20*REALIZADO:*%20%0A%0A*Cliente%3A*%0A" + this.userService.getUserNome() + '%0ARua ' + this.rua + ', ' + this.numero + '%0A' + this.bairro + "%0A%0A" + "Referência: " + this.obs + "%0A%0A*PEDIDO:*%0A" + this.encoded + '%0A%0A' + '*Pagar* *com:* *' + this.tipo + '*%0A*Total:* *R$* ' + '*' + this.subtotal2 + '*' + '%0A*Troco* *para:* *R$' + this.troco + ',00*' + '%0A%0A============%0A*Sistema* *Delivery*%0Apor *Home* *Company*');

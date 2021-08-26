@@ -6302,6 +6302,8 @@ a.close.disabled {
   position: relative;
   flex: 1 1 auto;
   padding: 1rem;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .modal-footer {

@@ -13,10 +13,8 @@ export class Post {
     url_site_img_produtos: string = this.url + 'admin/storage/';
     url_site_img_cat: string = this.url + 'admin/storage/';
 
-
     constructor(private http: HttpClient) {
     }
-
 
     dadosApi(dados: any, api: string) {
         const httpOptions = {

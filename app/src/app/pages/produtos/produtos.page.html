@@ -52,9 +52,6 @@
                   <ion-fab-button *ngIf="cpf !== ''" (click)="addCarrinho(item.id)" size="small" expand="block" color="success">
                     <ion-icon name="add-outline"></ion-icon>
                   </ion-fab-button>
-                  <ion-fab-button *ngIf="cpf === ''" (click)="comecar()" size="small" expand="block" color="success">
-                    <ion-icon name="help-outline"></ion-icon>
-                  </ion-fab-button>
                 </ion-fab>
               </div>
               <div *ngIf="item.estoque === '0'">

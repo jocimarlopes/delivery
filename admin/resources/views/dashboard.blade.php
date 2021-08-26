@@ -6,21 +6,12 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col">
-                <a type="button" class="btn btn-success" style="margin-bottom: 15px" href="/home" >
+                <a type="button" class="btn btn-success" style="margin-bottom: 15px" href="/admin/home" >
                     <i class="fa fa-refresh"></i>
                     Recarregar
                 </a>            
             </div>
-            <div class="col">
-                <form action="{{ route('home.destroy', $carrinho) }}" method="post">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger" style="margin-bottom: 15px">
-                        <i class="fa fa-trash"></i>
-
-                        Limpar carrinho
-                    </button>
-                </form>           
+            <div class="col">       
             </div>
         </div>
         <div class="header-body">
@@ -139,7 +130,12 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                          <button type="button" class="btn btn-primary">Concluído</button>
+
+                            <form action="{{ route('venda.concluida', $venda->id) }}">
+                                @csrf
+
+                                <button type="submit" class="btn btn-primary">Concluído</button>
+                            </form>
                           <!-- APERTOU CONCLUIDO, TEM QUE ALTERAR STATUS DO PEDIDO + RETIRAR DA LISTA ATUAL -->
                         </div>
                       </div>

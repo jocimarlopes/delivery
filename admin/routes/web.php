@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::any('products/search', 'ProdutoController@search')->name('products.search')->middleware('auth');
 Route::resource('products', 'ProdutoController')->middleware('auth');
-Route::resource('vendas', 'VendaController')->middleware('auth');
+Route::resource('vendas', 'Bkp_VendaController')->middleware('auth');
 Route::resource('categorias', 'ProdutoCategoriaController')->middleware('auth');
 Route::resource('carrinho', 'CarController')->middleware('auth');
 Route::resource('locais', 'LocalController')->middleware('auth');
@@ -41,6 +41,7 @@ Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');
 Route::delete('home/', 'HomeController@destroy')->name('home.destroy');
 
+Route::put('home/', 'HomeController@concluido')->name('venda.concluida');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);

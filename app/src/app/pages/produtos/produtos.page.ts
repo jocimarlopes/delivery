@@ -106,7 +106,8 @@ export class ProdutosPage implements OnInit {
             this.router.navigate(['/carrinho']);
           }
           else {
-            this.helpers.mensagem('Olá ' + this.userService.getUserNome() + ', adicione algo ao carrinho', 2400, 'dark');
+            this.listarCarrinho();
+            this.helpers.mensagem('Olá ' + this.userService.getUserNome() + ', adicione algo ao carrinho', 2000, 'dark');
           }
         }
       }
@@ -282,6 +283,7 @@ export class ProdutosPage implements OnInit {
                 this.cpf = data.celular;
                 this.userService.setUserNome(data.nome);
                 this.nome = data.nome;
+                this.listarCarrinho();
                 this.bairros();
               }
               else {
@@ -473,7 +475,7 @@ export class ProdutosPage implements OnInit {
     await alert.present();
   }
 
-  configEntrega(data) {
+  async configEntrega(data) {
     return new Promise(resolve => {
 
       let dados = {
@@ -483,10 +485,16 @@ export class ProdutosPage implements OnInit {
 
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(res => {
 
-        this.valorEntrega = res['result'][0]['price'];
-        this.helpers.recebeValorEntrega(res['result'][0]['price']);
-        this.helpers.recebeLocal(res['result'][0]);
-        resolve(true);
+        if(res['result'] == 0) {
+          console.log('erro ao carregar: ', res['result'])
+        }
+        else {
+          this.storage.set('bairro', JSON.stringify(res['result'][0]));
+          this.valorEntrega = res['result'][0]['price'];
+          this.helpers.recebeValorEntrega(res['result'][0]['price']);
+          this.helpers.recebeLocal(res['result'][0]);
+          resolve(true);
+        }
 
       });
 
@@ -512,11 +520,13 @@ export class ProdutosPage implements OnInit {
             return
 
           }
-          else {
+        });
+        this.storage.get('bairro').then(data => {
+          if(data) {
+            var bairro = JSON.parse(data);
+            this.helpers.recebeLocal(bairro);
           }
         });
-      }
-      else {
       }
     })
 

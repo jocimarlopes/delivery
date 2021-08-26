@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Venda;
+use App\Models\Bkp_Venda;
 use App\Models\Car;
 use Illuminate\Http\Request;
 
-class VendaController extends Controller
+class Bkp_VendaController extends Controller
 {
     protected $request;
     private $repository;
 
-    public function __construct(Request $request, Venda $venda)
+    public function __construct(Request $request, Bkp_Venda $venda)
     {
         $this->request = $request;
         $this->repository = $venda;
@@ -32,12 +32,12 @@ class VendaController extends Controller
     public function index()
     {
         $carrinhos = Car::first();
-        $vendas = Venda::all();
+        $vendas = Bkp_Venda::all();
 
-       /*  return view('admin.pages.vendas.index', [
+        return view('admin.pages.vendas.index', [
             'vendas' => $vendas,
             'carrinho' => $carrinhos,
-        ]); */
+        ]);
     }
 
     /**
@@ -112,10 +112,10 @@ class VendaController extends Controller
 
         $vendas = $this->repository->search($request->filter);
 
-        /* return view('admin.pages.vendas.index', [
+        return view('admin.pages.vendas.index', [
             'vendas' => $vendas,
             'filters' => $filters,
-        ]); */
+        ]);
     }
 
 }

@@ -54,4 +54,9 @@ class HomeController extends Controller
 
         return redirect()->route('home.index');
     }
+
+    public function concluido()
+    {
+        // concluir pedido, passar pedido para bkp_vendas, excluir pedido de vendas
+    }
 }

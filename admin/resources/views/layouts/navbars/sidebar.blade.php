@@ -58,7 +58,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('vendas.index') }}">
-                        <i class="ni ni-credit-card text-danger"></i> {{ __('Todos os Pedidos') }}
+                        <i class="ni ni-credit-card text-danger"></i> {{ __('Pedidos Concluídos') }}
                     </a>
                 </li>
              <li class="nav-item">
