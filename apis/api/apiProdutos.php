@@ -565,7 +565,39 @@ else if($postjson['requisicao'] == 'soma-total'){
   
   
 }
+else if($postjson['requisicao'] == 'listar-paes'){
 
+  $query = $pdo->query("SELECT * from tipo_paes order by id asc");
+ 
+ 
+  $res = $query->fetchAll(PDO::FETCH_ASSOC);
+  $total = count($res);
+
+ for ($i=0; $i < count($res); $i++) { 
+    foreach ($res[$i] as $key => $value) {
+    }
+     $dados[] = array(
+     'nome' => $res[$i]['nome'],
+     'foto' => $res[$i]['foto'],
+     'quantidade' => $res[$i]['quantidade'],
+   );
+
+}
+
+      if(count($res) > 0){
+              $result = json_encode(array('success'=>true, 'result'=>$dados, 'total'=>$total));
+
+          }else{
+              $result = json_encode(array('success'=>false, 'result'=>'0'));
+
+          }
+          echo $result;
+
+
+
+
+
+}
 
 
 

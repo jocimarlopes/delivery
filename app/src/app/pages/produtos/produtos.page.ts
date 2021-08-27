@@ -72,27 +72,39 @@ export class ProdutosPage implements OnInit {
     }
     else {
       if (this.horarios.pegarHoraAtual() < this.horarios.pegarHoraAbertura() && this.horarios.pegarHoraAtual() > 12) {
+        this.statusTempo == 0
+        this.fechado();
+      }
+      else if (this.horarios.pegarHoraAtual() < this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraFechamento() < 24 && this.horarios.pegarHoraAtual() < this.horarios.pegarHoraAbertura() && this.horarios.pegarHoraFechamento() > 12 ) {
+        this.statusTempo == 0;
         this.fechado();
       }
       else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraAtual() < 12) {
+        this.statusTempo == 0
         this.fechado();
       }
       else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraAtual() > 12) {
+        this.statusTempo == 0
         this.fechado();
       }
       else if (this.horarios.pegarHoraAtual() == this.horarios.pegarHoraAbertura() && this.horarios.pegarMinutoAtual() < this.horarios.pegarMinutoAbertura()) {
+        this.statusTempo == 0
         this.fechado();
       }
       else if (this.horarios.pegarHoraAtual() >= this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento()) {
+        this.statusTempo == 0
         this.fechado();
       }
       else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() < this.horarios.pegarMinutoFechamento()) {
+        this.statusTempo == 0
         this.fechado();
       }
       else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento()) {
+        this.statusTempo == 0
         this.fechado();
       }
       else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento()) {
+        this.statusTempo == 0
         this.fechado();
       }
       else {
@@ -300,31 +312,33 @@ export class ProdutosPage implements OnInit {
     await alert.present();
   }
 
-  addCarrinho(id) {
-
+  addCarrinho(data) {
+    console.log(data)
     if (this.statusTempo == 1) {
-
-      return new Promise(resolve => {
-
-        let dados = {
-          requisicao: 'add-carrinho',
-          id_produto: id,
-          cpf: this.cpf,
-
-        };
-
-        this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
-
-          this.mensagemSalvar();
-          this.listarCarrinho();
-
+      if(data.produto_categoria_id == 18 && this.helpers.enviaPao() == '') {
+        this.listarPao(data);
+      }
+      else {
+        return new Promise(resolve => {
+  
+          let dados = {
+            requisicao: 'add-carrinho',
+            id_produto: data.id,
+            cpf: this.cpf,
+  
+          };
+  
+          this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
+  
+            this.mensagemSalvar();
+            this.listarCarrinho();
+  
+          });
         });
-      });
+      }
 
     } else {
-
       this.fechado();
-
     }
   }
 
@@ -503,7 +517,6 @@ export class ProdutosPage implements OnInit {
       if (data) {
         var bairro = JSON.parse(data);
         this.helpers.recebeLocal(bairro);
-        console.log(bairro.price);
         this.helpers.recebeValorEntrega(bairro.price);
         this.valorEntrega = bairro.price;
       }
@@ -526,5 +539,52 @@ export class ProdutosPage implements OnInit {
     });
 
   }
+
+  async listarPao(item) {
+      
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Selecione o Pão',
+      inputs: [
+        {
+          name: 'pao',
+          type: 'radio',
+          label: 'Pão com Gergelim',
+          value: '(Pão C/ Gergelim)',
+          checked: true
+        },
+        {
+          name: 'pao',
+          type: 'radio',
+          label: 'Pão de Brioche',
+          value: '(Pão Brioche)',
+        },
+        {
+          name: 'pao',
+          type: 'radio',
+          label: 'Pão sem Gergelim',
+          value: '(Pão S/ Gergelim)',
+        }
+      ],
+      buttons: [
+        {
+          text: 'Selecionar',
+          handler: (data) => {
+            this.helpers.recebePao(data);
+            this.paoHamburguer(data, item);
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async paoHamburguer(tipoPao, itemPedido) {
+    let pao = itemPedido.nome + '%0A' + tipoPao;
+    itemPedido.nome = pao;
+    await this.addCarrinho(itemPedido);
+    this.helpers.recebePao('');
+  }
+
 
 }

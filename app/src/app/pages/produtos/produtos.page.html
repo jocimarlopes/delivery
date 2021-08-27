@@ -49,7 +49,7 @@
             <ion-card-content>
               <div *ngIf="item.estoque !== '0'">
                 <ion-fab *ngIf="statusTempo == 1">
-                  <ion-fab-button *ngIf="cpf !== ''" (click)="addCarrinho(item.id)" size="small" expand="block" color="success">
+                  <ion-fab-button *ngIf="cpf !== ''" (click)="addCarrinho(item)" size="small" expand="block" color="success">
                     <ion-icon name="add-outline"></ion-icon>
                   </ion-fab-button>
                 </ion-fab>

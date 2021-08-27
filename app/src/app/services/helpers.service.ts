@@ -11,6 +11,7 @@ export class HelpersService {
   bairro: any;
 
   local: any;
+  paoSelecionado: any = '';
 
   constructor(
     public loadingController: LoadingController,
@@ -61,6 +62,14 @@ export class HelpersService {
 
   enviaLocal() {
     return this.local;
+  }
+
+  recebePao(data) {
+    this.paoSelecionado = data;
+  }
+
+  enviaPao() {
+    return this.paoSelecionado;
   }
 
   async mensagem(mensagem, tempo, cor) {
