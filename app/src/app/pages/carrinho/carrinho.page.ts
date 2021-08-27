@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { HelpersService } from '../../services/helpers.service';
+import { HorariosService } from 'src/app/services/horarios.service';
 
 @Component({
   selector: 'app-carrinho',
@@ -59,7 +60,7 @@ export class CarrinhoPage implements OnInit {
 
   pagamento: any = '';
 
-  constructor(public helpers: HelpersService, public userService: UserService, public alertController: AlertController, private actRouter: ActivatedRoute, private router: Router, private provider: Post, public toast: ToastController) {
+  constructor(public horarios: HorariosService,public helpers: HelpersService, public userService: UserService, public alertController: AlertController, private actRouter: ActivatedRoute, private router: Router, private provider: Post, public toast: ToastController) {
   }
 
   ngOnInit() {
@@ -360,7 +361,7 @@ export class CarrinhoPage implements OnInit {
         {
           name: 'obs',
           type: 'textarea',
-          placeholder: 'Referência: Próximo a UPA, etc..',
+          placeholder: 'Observações',
           value: this.obs
         },
 
@@ -422,6 +423,7 @@ export class CarrinhoPage implements OnInit {
   }
 
   async finalizar() {
+    let hora = await this.horarios.pegarHoraAtual() + ':' + this.horarios.pegarMinutoAtual();
     await this.encodeUrl();
     return new Promise(resolve => {
 
@@ -435,6 +437,7 @@ export class CarrinhoPage implements OnInit {
         nome_cliente: this.nome_cliente,
         telefone: this.telefone, // NÃO ESTÁ PEGANDO O TELEFONE, O TELEFONE VAI PARA O 'NOME', E NO 'TELEFONE' É TUDO ALEATÓRIO
         rua: this.rua,
+        hora: hora,
         numero: this.numero,
         bairro: this.bairro,
       };
@@ -486,7 +489,7 @@ export class CarrinhoPage implements OnInit {
           handler: () => {
 
             window.open("https://api.whatsapp.com/send?phone=55" + this.tempo.contato + "&text=*NOVO*%20*PEDIDO*%20*REALIZADO:*%20%0A%0A*Cliente%3A*%0A" + this.userService.getUserNome() + '%0ARua ' + this.rua + ', ' + this.numero + '%0A' + this.bairro + "%0A%0A" + "Referência: " + this.obs + "%0A%0A*PEDIDO:*%0A" + this.encoded + '%0A%0A' + '*Pagar* *com:* *' + this.tipo + '*%0A*Total:* *R$* ' + '*' + this.subtotal2 + '*' + '%0A*Troco* *para:* *R$' + this.troco + ',00*' + '%0A%0A============%0A*Sistema* *Delivery*%0Apor *Home* *Company*');
-
+            location.reload();
           }
         }
       ]

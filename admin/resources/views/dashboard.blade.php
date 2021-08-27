@@ -3,6 +3,7 @@
 @section('content')
 
 <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+<img src="https://lanchesdojo.store/admin/argon/img/logo-home-black.jpg" style="display: none !important;">
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col">
@@ -22,7 +23,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">Lanches da Noite</h5>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Lanches vendidos</h5>
                                     @if($carrinho != NULL)
                                     <span class="h2 font-weight-bold mb-0">{{ $carrinho->sum('quantidade') }}</span>
                                     @else
@@ -94,32 +95,30 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-xl-6 col-lg-6 ">
-                                    <h1>Pedido:</h1>
+                                <div class="col-xl-6 col-lg-6 " id="pedido-{{ $venda->id }}">
+                                    <h3>Pedido:</h3>
                                     <p class="card-text">
                                     @foreach ($venda->carrinho as $cart)
                                         @foreach ($cart->produtos as $produto)
-                                        Qtd: {{ $cart->quantidade }} Nome: {{ $produto->nome }}<br>
+                                        {{ $cart->quantidade }} - {{ $produto->nome }}<br>
                                         @endforeach
                                     @endforeach
                                     </p>
-                                </div><br>
-                                <div class="col-xl-6 col-lg-6">
-                                    <h1>Observações:</h1>
+                                </div>
+                                <div class="col-xl-6 col-lg-6" id="obs-{{ $venda->id }}">
+                                    <h3>Observações:</h3>
                                     <p>{{ $venda->obs }}</p>
-                                    <p></p>
                                 </div>
                             </div>
-                            <br>
                             <div class="row">
-                                <div class="col-xl-6 col-lg-6 ">
-                                    <h1>Endereço de Entrega:</h1>
+                                <div class="col-xl-6 col-lg-6 " id="endereco-{{ $venda->id }}">
+                                    <h3>Endereço de Entrega:</h3>
                                     <p>Rua: {{ $venda->rua }}</p>
                                     <p>Número: {{ $venda->numero }}</p>
                                     <p>Bairro: {{ $venda->bairro }}</p>
                                 </div>
-                                <div class="col-xl-6 col-lg-6">
-                                    <h1>Cliente:</h1>
+                                <div class="col-xl-6 col-lg-6" id="cliente-{{ $venda->id }}">
+                                    <h3>Cliente:</h3>
                                     <p>Nome:{{ $venda->nome_cliente }}</p>
                                     <p>Telefone: {{ $venda->cliente }}</p>
                                     <p>Total: R${{ $venda->total }}</p>
@@ -129,13 +128,19 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <div class="col-xl-6 col-lg-6" style="float:left">
+                          <button type="button" class="btn btn-primary" onclick="PrintElem({{ $venda->id }})">Imprimir</button>
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-
-                            <form action="{{ route('venda.concluida', $venda->id) }}">
+                        </div>
+                            <div class="col-xl-6 col-lg-6">
+                            <form action="{{ route('home.destroy', $venda->id) }}" method="post">
                                 @csrf
-
-                                <button type="submit" class="btn btn-primary">Concluído</button>
+                                @method('DELETE')
+                                <button type="submit" style="float:right !important" class="btn btn-danger">Concluído</button>
                             </form>
+                            </div>
+
+
                           <!-- APERTOU CONCLUIDO, TEM QUE ALTERAR STATUS DO PEDIDO + RETIRAR DA LISTA ATUAL -->
                         </div>
                       </div>

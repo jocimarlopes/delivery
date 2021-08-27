@@ -66,9 +66,7 @@ export class ProdutosPage implements OnInit {
     await this.listarLocais();
   }
 
-
   async comecar() {
-
     if (this.statusTempo == 0) {
       this.fechado();
     }
@@ -102,7 +100,7 @@ export class ProdutosPage implements OnInit {
           this.nomeCpf();
         }
         else {
-          if(parseInt(this.total_carrinho) > 0) {
+          if (parseInt(this.total_carrinho) > 0) {
             this.router.navigate(['/carrinho']);
           }
           else {
@@ -247,7 +245,6 @@ export class ProdutosPage implements OnInit {
   }
 
   async nomeCpf() {
-    /* this.router.navigate(['/login']); */
 
     const alert = await this.alertCtrl.create({
       header: 'Por favor, preencha os campos abaixo',
@@ -302,7 +299,6 @@ export class ProdutosPage implements OnInit {
 
     await alert.present();
   }
-
 
   addCarrinho(id) {
 
@@ -459,7 +455,7 @@ export class ProdutosPage implements OnInit {
         {
           text: 'Ok',
           handler: (data) => {
-            if(data) {
+            if (data) {
               this.configEntrega(data);
               this.mensagemPadrao('Agora sim! Adicione produtos ao carrinho', 2000, 'success');
             }
@@ -485,7 +481,7 @@ export class ProdutosPage implements OnInit {
 
       this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(res => {
 
-        if(res['result'] == 0) {
+        if (res['result'] == 0) {
           console.log('erro ao carregar: ', res['result'])
         }
         else {
@@ -503,32 +499,31 @@ export class ProdutosPage implements OnInit {
 
   async getStorage() {
     await this.storage.init();
-    await this.storage.get('token').then(token => {
-      if (token) {
-
-        this.storage.get('user').then(data => {
-
-          var user = JSON.parse(data);
-
-          if (data) {
-            //usuário já esteve aqui
-            this.userService.setUserCpf(user.celular);
-            this.userService.setUserCelular(user.celular);
-            this.cpf = user.celular;
-            this.userService.setUserNome(user.nome);
-            this.nome = user.nome;
-            return
-
-          }
-        });
-        this.storage.get('bairro').then(data => {
-          if(data) {
-            var bairro = JSON.parse(data);
-            this.helpers.recebeLocal(bairro);
-          }
-        });
+    await this.storage.get('bairro').then(data => {
+      if (data) {
+        var bairro = JSON.parse(data);
+        this.helpers.recebeLocal(bairro);
+        console.log(bairro.price);
+        this.helpers.recebeValorEntrega(bairro.price);
+        this.valorEntrega = bairro.price;
       }
-    })
+    });
+
+    this.storage.get('user').then(data => {
+
+      var user = JSON.parse(data);
+
+      if (data) {
+        //usuário já esteve aqui
+        this.userService.setUserCpf(user.celular);
+        this.userService.setUserCelular(user.celular);
+        this.cpf = user.celular;
+        this.userService.setUserNome(user.nome);
+        this.nome = user.nome;
+        return
+
+      }
+    });
 
   }
 

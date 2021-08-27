@@ -328,6 +328,7 @@ if ($quant == 0) {
 
 $tipo = $postjson['tipo'];
 $rua = $postjson['rua'];
+$hora = $postjson['hora'];
 $numero = $postjson['numero'];
 $bairro = $postjson['bairro'];
 $nome_cliente = $postjson['nome_cliente'];
@@ -341,9 +342,6 @@ $total_pago = $postjson['troco'];
 if ($total_pago == ''){
   $total_pago = 0;
 }
-
-
-
 
 if($tipo == ''){
   $texto = 'Preencha o Tipo de Pagamento';
@@ -371,7 +369,7 @@ if($total_pago != ''){
 if($cpf_cliente != ''){
 
 
-$res = $pdo->prepare("INSERT into vendas (cliente, total, total_pago, troco, tipo_pgto, data, hora, status, pago, obs, nome_cliente, telefone, bairro, rua, numero) values (:cliente, :total, :total_pago, :troco, :tipo_pgto, curDate(), curTime(), :status, :pago, :obs, :nome_cliente, :telefone, :bairro, :rua, :numero)");
+$res = $pdo->prepare("INSERT into vendas (cliente, total, total_pago, troco, tipo_pgto, data, hora, status, pago, obs, nome_cliente, telefone, bairro, rua, numero) values (:cliente, :total, :total_pago, :troco, :tipo_pgto, curDate(), :hora, :status, :pago, :obs, :nome_cliente, :telefone, :bairro, :rua, :numero)");
 
 $res->bindValue(":cliente", $cpf_cliente);
 $res->bindValue(":total", $total);
@@ -385,10 +383,33 @@ $res->bindValue(":nome_cliente", $nome_cliente);
 $res->bindValue(":telefone", $telefone);
 $res->bindValue(":bairro", $bairro);
 $res->bindValue(":rua", $rua);
+$res->bindValue(":hora", $hora);
 $res->bindValue(":numero", $numero);
 
 $res->execute();
+
 $id_venda = $pdo->lastInsertId();
+
+
+$res = $pdo->prepare("INSERT into bkp_vendas (cliente, total, total_pago, troco, tipo_pgto, data, hora, status, pago, obs, nome_cliente, telefone, bairro, rua, numero) values (:cliente, :total, :total_pago, :troco, :tipo_pgto, curDate(), :hora, :status, :pago, :obs, :nome_cliente, :telefone, :bairro, :rua, :numero)");
+
+$res->bindValue(":cliente", $cpf_cliente);
+$res->bindValue(":total", $total);
+$res->bindValue(":total_pago", $total_pago);
+$res->bindValue(":troco", $troco);
+$res->bindValue(":tipo_pgto", $tipo);
+$res->bindValue(":status", 'Iniciado');
+$res->bindValue(":pago", 'Não');
+$res->bindValue(":obs", $obs);
+$res->bindValue(":nome_cliente", $nome_cliente);
+$res->bindValue(":telefone", $telefone);
+$res->bindValue(":bairro", $bairro);
+$res->bindValue(":rua", $rua);
+$res->bindValue(":hora", $hora);
+$res->bindValue(":numero", $numero);
+
+$res->execute();
+
   
 } 
 

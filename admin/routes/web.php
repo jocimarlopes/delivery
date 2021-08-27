@@ -15,8 +15,6 @@ Route::resource('config', 'ConfController')->middleware('auth');
  */
 Route::get('/home/$id', 'HomeController@idModal');
 
-
-
 /**
  * Rota Limpar Cache Painel
  */
@@ -29,19 +27,14 @@ Route::get('/login', function () {
     return 'Login';
 })->name('login');
 
-
 Route::get('/', function () {
     return view('auth.login');
 });
 
-
-
 Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::delete('home/', 'HomeController@destroy')->name('home.destroy');
-
-Route::put('home/', 'HomeController@concluido')->name('venda.concluida');
+Route::delete('home/{id}', 'HomeController@destroy')->name('home.destroy');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'UserController', ['except' => ['show']]);

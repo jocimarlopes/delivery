@@ -11,14 +11,18 @@ use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
+
+    private $repository;
+
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @return void 
      */
-    public function __construct()
+    public function __construct(Venda $venda)
     {
         $this->middleware('auth');
+        $this->repository = $venda;
     }
 
     /**
@@ -44,19 +48,16 @@ class HomeController extends Controller
             'cliente' => $cliente,
         ]);
     }
-
-    public function destroy()
+ 
+    public function destroy($id)
     {
-        $carrinho = DB::table('carrinho')->truncate();
-
-        if (!$carrinho)
+        $venda = $this->repository->where('id', $id)->first();
+        if (!$venda)
             return redirect()->back();
+    
+        $venda->delete();
 
-        return redirect()->route('home.index');
+        return redirect()->route('home');
     }
 
-    public function concluido()
-    {
-        // concluir pedido, passar pedido para bkp_vendas, excluir pedido de vendas
-    }
 }

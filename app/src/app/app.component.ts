@@ -4,6 +4,8 @@ import { AlertController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Post } from './services/post.service';
+import { StorageService } from './services/storage.service';
+import { HelpersService } from './services/helpers.service';
 
 @Component({
   selector: 'app-root',
@@ -40,7 +42,9 @@ export class AppComponent implements OnInit {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public provider: Post,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public storage: StorageService,
+    public helper: HelpersService
   ) {
     this.initializeApp();
   }
@@ -66,6 +70,12 @@ export class AppComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async clear() {
+    await this.storage.clear();
+    location.reload();
+    return false;
   }
 
 }

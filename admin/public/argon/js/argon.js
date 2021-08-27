@@ -1061,3 +1061,26 @@ var SalesChart = (function() {
 	}
 
 })();
+
+//Imprime
+function PrintElem(id)
+{
+    var mywindow = window.open('', 'PRINT', 'height=600,width=400');
+
+    mywindow.document.write('<html><head><title>' + 'Sistema Delivery por HomeCompany'  + '</title><style>p, h3 {font-family: "Arial Bold", sans-serif !important;}</style>');
+    mywindow.document.write('</head><body >');
+    mywindow.document.write('<img src="https://lanchesdojo.store/admin/argon/img/logo-home-black.jpg" style="width: 120px; height: auto;">');
+    mywindow.document.write(document.getElementById('pedido-'+id).innerHTML);
+    mywindow.document.write(document.getElementById('cliente-'+id).innerHTML);
+    mywindow.document.write(document.getElementById('obs-'+id).innerHTML);
+    mywindow.document.write(document.getElementById('endereco-'+id).innerHTML);
+    mywindow.document.write('</body></html>');
+
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+
+    mywindow.print();
+    mywindow.close();
+
+    return true;
+}
