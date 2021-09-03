@@ -7,7 +7,8 @@ import 'rxjs/add/operator/map';
 export class Post {
 
     //url: string = 'https://jocimarlopes.tech/apis/cardapio/';
-    url: string = 'https://lanchesdojo.store/';
+    //url: string = 'https://lanchesdojo.store/';
+    url: string = 'https://kingsbeer.store/';
 
     server: string = this.url + 'api/';
     url_site_img_produtos: string = this.url + 'admin/storage/';

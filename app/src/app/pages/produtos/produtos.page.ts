@@ -68,44 +68,54 @@ export class ProdutosPage implements OnInit {
 
   async comecar() {
     if (this.statusTempo == 0) {
+      console.log('fechado, 1')
       this.fechado();
     }
     else {
-      if (this.horarios.pegarHoraAtual() < this.horarios.pegarHoraAbertura() && this.horarios.pegarHoraAtual() > 12) {
+      if (this.horarios.pegarHoraAtual() < this.horarios.pegarHoraAbertura() && this.horarios.pegarHoraAtual() > 6) {
         this.statusTempo == 0
+        console.log('fechado, 2')
         this.fechado();
       }
-      else if (this.horarios.pegarHoraAtual() < this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraFechamento() < 24 && this.horarios.pegarHoraAtual() < this.horarios.pegarHoraAbertura() && this.horarios.pegarHoraFechamento() > 12 ) {
+      else if (this.horarios.pegarHoraAtual() < this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraFechamento() < 24 && this.horarios.pegarHoraAtual() < this.horarios.pegarHoraAbertura() && this.horarios.pegarHoraFechamento() > 12) {
         this.statusTempo == 0;
         this.fechado();
+      console.log('fechado, 3')
       }
-      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraAtual() < 12) {
+      else if (this.horarios.pegarHoraAtual() < 6 && this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento()) {
         this.statusTempo == 0
         this.fechado();
+      console.log('fechado, 4')
       }
-      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraAtual() > 12) {
+      else if (this.horarios.pegarHoraAtual() > 6 && this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraFechamento() > 6) {
         this.statusTempo == 0
         this.fechado();
+      console.log('fechado, 5')
       }
       else if (this.horarios.pegarHoraAtual() == this.horarios.pegarHoraAbertura() && this.horarios.pegarMinutoAtual() < this.horarios.pegarMinutoAbertura()) {
         this.statusTempo == 0
         this.fechado();
+      console.log('fechado, 6')
       }
-      else if (this.horarios.pegarHoraAtual() >= this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento()) {
+      else if (this.horarios.pegarHoraAtual() >= this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento() && this.horarios.pegarHoraAtual() < 6) {
         this.statusTempo == 0
         this.fechado();
+      console.log('fechado, 7')
       }
-      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() < this.horarios.pegarMinutoFechamento()) {
+      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() < this.horarios.pegarMinutoFechamento() && this.horarios.pegarHoraAtual() < 6) {
         this.statusTempo == 0
         this.fechado();
+      console.log('fechado, 8')
       }
-      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento()) {
+      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarHoraAtual() < 6) {
         this.statusTempo == 0
         this.fechado();
+      console.log('fechado, 9')
       }
-      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento()) {
+      else if (this.horarios.pegarHoraAtual() > this.horarios.pegarHoraFechamento() && this.horarios.pegarMinutoAtual() >= this.horarios.pegarMinutoFechamento() && this.horarios.pegarHoraAtual() < 6) {
         this.statusTempo == 0
         this.fechado();
+      console.log('fechado, 10')
       }
       else {
         if (this.cpf === undefined || this.cpf === '') {
@@ -313,29 +323,28 @@ export class ProdutosPage implements OnInit {
   }
 
   addCarrinho(data) {
-    console.log(data)
-    if (this.statusTempo == 1) {
+    if (this.statusTempo == 1) {/* 
       if(data.produto_categoria_id == 18 && this.helpers.enviaPao() == '') {
         this.listarPao(data);
       }
-      else {
-        return new Promise(resolve => {
-  
-          let dados = {
-            requisicao: 'add-carrinho',
-            id_produto: data.id,
-            cpf: this.cpf,
-  
-          };
-  
-          this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
-  
-            this.mensagemSalvar();
-            this.listarCarrinho();
-  
-          });
+      else { */
+      return new Promise(resolve => {
+
+        let dados = {
+          requisicao: 'add-carrinho',
+          id_produto: data.id,
+          cpf: this.cpf,
+
+        };
+
+        this.provider.dadosApi(dados, 'apiProdutos.php').subscribe(data => {
+
+          this.mensagemSalvar();
+          this.listarCarrinho();
+
         });
-      }
+      });
+      /* } */
 
     } else {
       this.fechado();
@@ -541,7 +550,7 @@ export class ProdutosPage implements OnInit {
   }
 
   async listarPao(item) {
-      
+
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Selecione o Pão',
